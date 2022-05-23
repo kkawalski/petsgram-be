@@ -3,7 +3,7 @@ import werkzeug.datastructures
 
 from app import db
 from app.models import BaseModel
-from images import UploadSet, avatars, posts
+from images import UploadSet, avatars, pictures
 
 
 class Image(BaseModel):
@@ -20,9 +20,9 @@ class Image(BaseModel):
     @property
     def upload_set(self) -> UploadSet:
         from users.models import Profile
-        if self.object.is_type(Profile):
+        if isinstance(self.object, Profile):
             return avatars
-        # if self.object.us_type(Post):
+        # if self.object.is_type(Post):
         #     return posts
 
     @property

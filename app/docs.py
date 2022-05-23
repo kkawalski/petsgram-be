@@ -5,18 +5,17 @@ from app import api
 base_model = api.model("Base", {
     "id": api_fields.Integer(
         description="Id",
-        dump_only=True,
+        readonly=True,
     ),
     "created": api_fields.DateTime(
         description="Created",
-        dump_only=True,
+        readonly=True,
     ),
     "modified": api_fields.DateTime(
         description="Modified",
-        dump_only=True,
+        readonly=True,
     ),
 })
-
 
 error_model = api.model("Error", {
     "message": api_fields.String(

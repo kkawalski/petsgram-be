@@ -4,6 +4,7 @@ from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_restx import Api
 from flask_sqlalchemy import SQLAlchemy
+from flask_uploads import configure_uploads
 
 from app.config import Config
 
@@ -27,3 +28,6 @@ api = Api(app, authorizations={
 
 from app import routes
 from users import routes
+from images import routes
+
+

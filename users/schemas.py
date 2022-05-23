@@ -1,17 +1,21 @@
-from marshmallow import fields as ma_fields,post_load, validates_schema 
+from flask_jwt_extended import current_user
+from marshmallow import fields as ma_fields, post_load, pre_load, validates_schema, INCLUDE, validate
 from marshmallow.exceptions import ValidationError
 
 from app import ma
-from users.models import User
+from users.models import Profile, User
+from images.schemas import ImageSchema
 
 
 class UserSchema(ma.SQLAlchemyAutoSchema):
     password = ma_fields.String(required=True, load_only=True)
     password_submit = ma_fields.String(required=True, load_only=True)
     email = ma_fields.Email(required=True)
+    has_profile = ma_fields.Boolean(dump_only=True)
 
     class Meta:
         model = User
+        unknown = INCLUDE
 
     @validates_schema
     def validate_email_exist(self, data, **kwargs):
@@ -50,3 +54,21 @@ class LoginSchema(ma.Schema):
         if not user or user.password != data["password"]:
             raise ValidationError("Wrong email or password")
         return user
+
+
+class ProfileSchema(ma.SQLAlchemyAutoSchema):
+    user = ma_fields.Nested(UserSchema, dump_only=True)
+    first_name = ma_fields.String(required=True)
+    last_name = ma_fields.String(required=True)
+    user_id = ma_fields.Integer(load_only=True, required=True)
+    avatar = ma_fields.Nested(ImageSchema, dump_only=True)
+
+    class Meta:
+        model = Profile
+        include_fk = True
+        unknown = INCLUDE
+
+    @pre_load
+    def add_user_to_data(self, data, **kwargs):
+        data["user_id"] = current_user.id
+        return data

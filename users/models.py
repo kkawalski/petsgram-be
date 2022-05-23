@@ -12,6 +12,10 @@ class User(BaseModel):
     is_active = db.Column(db.Boolean, server_default="true")
     is_admin = db.Column(db.Boolean, server_default="false")
 
+    @property
+    def has_profile(self):
+        return bool(self.profile)
+
     def __repr__(self) -> str:
         return f"<User {self.email}>"
 
@@ -29,6 +33,6 @@ class Profile(BaseModel):
         return Image.query.filter_by(object=self).first()
 
     def __repr__(self) -> str:
-        return f"<Profile {self.first_name} {self.last_name}>" 
+        return f"<Profile {self.first_name} {self.last_name}>"
 
 

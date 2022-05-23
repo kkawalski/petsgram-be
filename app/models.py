@@ -1,6 +1,6 @@
 from sqlalchemy import func
 from sqlalchemy.ext.declarative import declared_attr
-from sqlalchemy_utils.types import URLType
+from werkzeug.exceptions import NotFound
 
 from app import db
 
@@ -25,3 +25,12 @@ class BaseModel(db.Model):
         db.session.delete(self)
         db.session.commit()
         return self.id
+
+    @classmethod
+    def get_or_404(cls, instance_id, query=None, **kwargs):
+        if query is None:
+            query = cls.query
+        instance = query.filter_by(id=instance_id, **kwargs).first()
+        if not instance:
+            raise NotFound
+        return instance

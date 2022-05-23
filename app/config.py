@@ -5,3 +5,5 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = os.getenv("SECRET_KEY", "your-super-secret-key")
     JWT_ERROR_MESSAGE_KEY = "message"
+    UPLOADS_DEFAULT_DEST = os.getcwd() + "/uploads"
+    UPLOADS_AUTOSERVE = True
