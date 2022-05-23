@@ -1,10 +1,10 @@
 from flask_restx import fields as api_fields
 
 from app.docs import base_model
-from users import users_ns
+from users import auth_ns, profiles_ns
 
 
-base_user = users_ns.clone("User", base_model, {
+base_user = auth_ns.clone("User", base_model, {
     "email": api_fields.String(
         description="User email",
         required=True, 
@@ -27,7 +27,7 @@ base_user = users_ns.clone("User", base_model, {
 
 list_users = api_fields.List(api_fields.Nested(base_user))
 
-register_user = users_ns.clone("RegisterUser", base_user, {
+register_user = auth_ns.clone("RegisterUser", base_user, {
     "password": api_fields.String(
         description="User password",
         required=True,
@@ -38,7 +38,7 @@ register_user = users_ns.clone("RegisterUser", base_user, {
     ),
 })
 
-login_req = users_ns.model("LoginRequest", {
+login_req = auth_ns.model("LoginRequest", {
     "email": api_fields.String(
         description="User email",
         required=True, 
@@ -51,7 +51,7 @@ login_req = users_ns.model("LoginRequest", {
     ),
 })
 
-login_res = users_ns.model("LoginResponse", {
+login_res = auth_ns.model("LoginResponse", {
     "access_token": api_fields.String(
         description="Access Token",
         readonly=True,
@@ -62,7 +62,7 @@ login_res = users_ns.model("LoginResponse", {
     ),
 })
 
-base_profile = users_ns.clone("Profile", base_model, {
+base_profile = profiles_ns.clone("Profile", base_model, {
     "first_name": api_fields.String(
         description="User email",
         required=True,
@@ -78,6 +78,6 @@ base_profile = users_ns.clone("Profile", base_model, {
 
 list_profiles = api_fields.List(api_fields.Nested(base_profile))
 
-my_profile = users_ns.clone("MyProfile", base_profile, {
+my_profile = profiles_ns.clone("MyProfile", base_profile, {
     "user": api_fields.Nested(base_user),
 })

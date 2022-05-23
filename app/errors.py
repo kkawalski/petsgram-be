@@ -1,0 +1,6 @@
+USER_WITH_EMAIL_EXIST = "User with this email already exist"
+PASSWORD_DOES_NOT_MATCH = "Passwords does not match"
+WORNG_LOGIN_CREDENTIALS = "Wrong email or password"
+WRONG_IMAGE_UPLOAD_SET = "Image allowed only for profile and post"
+WRONG_IMAGE_EXTENSION = "Only images allowed"
+WRONG_IMAGE_FILE = "Input payload validation failed"

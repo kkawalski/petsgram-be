@@ -3,6 +3,7 @@ from marshmallow import fields as ma_fields, post_load, pre_load, validates_sche
 from marshmallow.exceptions import ValidationError
 
 from app import ma
+from app.errors import PASSWORD_DOES_NOT_MATCH, USER_WITH_EMAIL_EXIST, WORNG_LOGIN_CREDENTIALS
 from users.models import Profile, User
 from images.schemas import ImageSchema
 
@@ -21,12 +22,12 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
     def validate_email_exist(self, data, **kwargs):
         users_cnt = User.query.filter_by(email=data["email"]).count()
         if users_cnt > 0:
-            raise ValidationError("User with this email already exist", "email")
+            raise ValidationError(USER_WITH_EMAIL_EXIST, "email")
 
     @validates_schema
     def validate_password_submit(self, data, **kwargs):
         if data["password"] != data["password_submit"]:
-            raise ValidationError("Passwords does not match", "password")
+            raise ValidationError(PASSWORD_DOES_NOT_MATCH, "password")
 
     @post_load
     def clean_password_submit(self, data, **kwargs):
@@ -52,7 +53,7 @@ class LoginSchema(ma.Schema):
     def check_user(self, data, **kwargs):
         user = User.query.filter_by(email=data["email"]).first()
         if not user or user.password != data["password"]:
-            raise ValidationError("Wrong email or password")
+            raise ValidationError(WORNG_LOGIN_CREDENTIALS)
         return user
 
 

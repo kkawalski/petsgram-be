@@ -9,8 +9,8 @@ class User(BaseModel):
     email = db.Column(EmailType, unique=True, nullable=False)
     password = db.Column(PasswordType(schemes=['pbkdf2_sha512']), nullable=False)
 
-    is_active = db.Column(db.Boolean, server_default="true")
-    is_admin = db.Column(db.Boolean, server_default="false")
+    is_active = db.Column(db.Boolean, server_default="true", default=True)
+    is_admin = db.Column(db.Boolean, server_default="false", default=False)
 
     @property
     def has_profile(self):

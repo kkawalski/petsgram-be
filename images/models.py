@@ -29,6 +29,10 @@ class Image(BaseModel):
     def url(self) -> str:
         return self.upload_set.url(self.filename)
 
+    @property
+    def path(self) -> str:
+        return self.upload_set.path(self.filename)
+
     def save(self) -> "Image":
         if self.file is not None:
             self.filename = self.upload_set.save(self.file)

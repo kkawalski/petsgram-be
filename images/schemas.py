@@ -4,6 +4,7 @@ from marshmallow.exceptions import ValidationError
 from werkzeug.datastructures import FileStorage
 
 from app import ma
+from app.errors import WRONG_IMAGE_EXTENSION, WRONG_IMAGE_FILE, WRONG_IMAGE_UPLOAD_SET
 from images.models import Image
 
 
@@ -23,13 +24,13 @@ class ImageSchema(ma.SQLAlchemyAutoSchema):
     @validates("file")
     def validate_file(self, value):
         if not isinstance(value, FileStorage):
-            raise ValidationError("Wrong file")
+            raise ValidationError(WRONG_IMAGE_FILE)
         if value.filename.split(".")[-1] not in IMAGES:
-            raise ValidationError("Only images allowed")
+            raise ValidationError(WRONG_IMAGE_EXTENSION)
 
     @validates("object")
     def validate_model(self, value):
         from users.models import Profile
         if not isinstance(value, (Profile, )):
-            raise ValidationError("Image allowed only for profile and post")
+            raise ValidationError(WRONG_IMAGE_UPLOAD_SET)
 

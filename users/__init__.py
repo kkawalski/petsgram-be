@@ -1,3 +1,4 @@
 from app import api
 
-users_ns = api.namespace("users", "Users", "/users")
+auth_ns = api.namespace("auth", "Auth", "/auth")
+profiles_ns = api.namespace("profiles", "Profiles", "/profiles")
