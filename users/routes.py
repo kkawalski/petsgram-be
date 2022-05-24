@@ -39,7 +39,6 @@ class LoginView(Resource):
 @auth_ns.route("/refresh")
 class RefreshTokenView(Resource):
 
-    @auth_ns.expect(login_req)
     @auth_ns.response(200, "Success", login_res)
     @auth_ns.response(401, "Unauthorized", error_model)
     @jwt_required(refresh=True)
