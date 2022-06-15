@@ -1,6 +1,7 @@
 from flask_restx import fields as api_fields
 
 from app.docs import base_model
+from images.docs import base_image
 from users import auth_ns, profiles_ns
 
 
@@ -74,10 +75,11 @@ base_profile = profiles_ns.clone("Profile", base_model, {
     "description": api_fields.String(
         description="Is user admin",
     ),
+    "avatar": api_fields.Nested(base_image)
 })
 
 list_profiles = api_fields.List(api_fields.Nested(base_profile))
 
-my_profile = profiles_ns.clone("MyProfile", base_profile, {
-    "user": api_fields.Nested(base_user),
-})
+# my_profile = profiles_ns.clone("MyProfile", base_profile, {
+#     "user": api_fields.Nested(base_user),
+# })

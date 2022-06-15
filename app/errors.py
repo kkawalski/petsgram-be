@@ -1,4 +1,5 @@
 USER_WITH_EMAIL_EXIST = "User with this email already exist"
+USER_PROFILE_EXIST = "Profile already exist"
 PASSWORD_DOES_NOT_MATCH = "Passwords does not match"
 WORNG_LOGIN_CREDENTIALS = "Wrong email or password"
 WRONG_IMAGE_UPLOAD_SET = "Image allowed only for profile and post"

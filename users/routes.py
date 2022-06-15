@@ -5,7 +5,7 @@ from app import jwt
 from app.docs import error_model
 from app.permissions import admin_only, with_profile_only
 from users import auth_ns, profiles_ns
-from users.docs import base_user, register_user, list_users, login_req, login_res, base_profile, list_profiles, my_profile
+from users.docs import base_user, register_user, list_users, login_req, login_res, base_profile, list_profiles #, my_profile
 from users.models import User, Profile
 from users.schemas import UserSchema, LoginSchema, ProfileSchema
 
@@ -136,7 +136,7 @@ class ProfileRetrieveView(Resource):
 @profiles_ns.route("/my-profile")
 class MyProfileView(Resource):
 
-    @profiles_ns.response(200, "Success", my_profile)
+    @profiles_ns.response(200, "Success", base_profile)
     @profiles_ns.response(401, "Unauthorized", error_model)
     @profiles_ns.response(403, "Forbidden", error_model)
     @profiles_ns.doc(security="Bearer")
@@ -147,14 +147,14 @@ class MyProfileView(Resource):
         return schema.dump(current_user.profile), 200
 
     @profiles_ns.expect(base_profile)
-    @profiles_ns.response(202, "Updated", my_profile)
+    @profiles_ns.response(202, "Updated", base_profile)
     @profiles_ns.response(401, "Unauthorized", error_model)
     @profiles_ns.response(403, "Forbidden", error_model)
     @profiles_ns.doc(security="Bearer")
     @jwt_required()
     @with_profile_only
     def put(self):
-        schema = ProfileSchema()
+        schema = ProfileSchema(update=True)
         profile_data = schema.load(profiles_ns.payload, partial=True)
         profiles = Profile.query.filter_by(user_id=current_user.id)
         profiles.update(profile_data)

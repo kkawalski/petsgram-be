@@ -1,9 +1,10 @@
+from flask import request
 from flask_jwt_extended import current_user
-from marshmallow import fields as ma_fields, post_load, pre_load, validates_schema, INCLUDE, validate
+from marshmallow import fields as ma_fields, post_load, pre_load, validates_schema, INCLUDE
 from marshmallow.exceptions import ValidationError
 
 from app import ma
-from app.errors import PASSWORD_DOES_NOT_MATCH, USER_WITH_EMAIL_EXIST, WORNG_LOGIN_CREDENTIALS
+from app.errors import PASSWORD_DOES_NOT_MATCH, USER_PROFILE_EXIST, USER_WITH_EMAIL_EXIST, WORNG_LOGIN_CREDENTIALS
 from users.models import Profile, User
 from images.schemas import ImageSchema
 
@@ -58,7 +59,11 @@ class LoginSchema(ma.Schema):
 
 
 class ProfileSchema(ma.SQLAlchemyAutoSchema):
-    user = ma_fields.Nested(UserSchema, dump_only=True)
+    def __init__(self, *args, update=False, **kwargs):
+        self.update = update
+        super().__init__(*args, **kwargs)
+
+    # user = ma_fields.Nested(UserSchema, dump_only=True)
     first_name = ma_fields.String(required=True)
     last_name = ma_fields.String(required=True)
     user_id = ma_fields.Integer(load_only=True, required=True)
@@ -68,6 +73,11 @@ class ProfileSchema(ma.SQLAlchemyAutoSchema):
         model = Profile
         include_fk = True
         unknown = INCLUDE
+    
+    @validates_schema
+    def validate_user_profile_exist(self, data, **kwargs):
+        if not self.update and current_user.has_profile:
+            raise ValidationError(USER_PROFILE_EXIST, "user_id")
 
     @pre_load
     def add_user_to_data(self, data, **kwargs):

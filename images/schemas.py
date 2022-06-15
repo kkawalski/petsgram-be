@@ -9,8 +9,8 @@ from images.models import Image
 
 
 class ImageSchema(ma.SQLAlchemyAutoSchema):
-    object_id = ma_fields.Integer(dump_only=True)
-    object_type = ma_fields.String(dump_only=True)
+    # object_id = ma_fields.Integer(dump_only=True)
+    # object_type = ma_fields.String(dump_only=True)
     object = ma_fields.Raw(load_only=True, required=True)
 
     file = ma_fields.Raw(load_only=True, required=True)
